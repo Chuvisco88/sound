@@ -47,7 +47,7 @@ const audioSuccess = function(localMediaStream) {
                 fill: 'none',
                 'stroke-width': 3,
                 'stroke-opacity': 0.3,
-                stroke: function(d) { return d3.hsl(hueScale(d), 0.5, 0.5); }
+                stroke: function(d) { return d3.hsl(hueScale(d), 0.3, 0.5); }
             });
 
         circles.exit().remove();
