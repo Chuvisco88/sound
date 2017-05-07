@@ -11,27 +11,46 @@ const audioSuccess = function(localMediaStream) {
     var audioCtx = new AudioContext();
     var audioSrc = audioCtx.createMediaStreamSource(localMediaStream);
     var analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 1024;
+    analyser.fftSize = 64;
     audioSrc.connect(analyser);
     var frequencyData = new Uint8Array(analyser.frequencyBinCount);
 
-    var bins = [];
-    frequencyData.forEach(function(e) {
-        var e = document.createElement('div');
-        e.classList.add('bin');
-        document.getElementById('bins').appendChild(e);
-        bins.push(e);
-    });
-
+    const svg = d3.select('body').append('svg')
+        .attr({
+            height: "100vh",
+            width: "100vw"
+        });
 
     function renderFrame() {
         analyser.getByteFrequencyData(frequencyData);
-        apis.audio = frequencyData;
 
-        frequencyData.forEach(function (data, index) {
-            bins[index].style.height = ((data * 100) / 256) + "%";
-        });
+        // scale things to fit
+        var radiusScale = d3.scale.linear()
+            .domain([0, d3.max(frequencyData)])
+            .range([0, window.innerHeight/2 -10]);
 
+        var hueScale = d3.scale.linear()
+            .domain([0, d3.max(frequencyData)])
+            .range([0, 360]);
+
+        // update d3 chart with new data
+        var circles = svg.selectAll('circle')
+            .data(frequencyData);
+
+        circles.enter().append('circle');
+
+        circles
+            .attr({
+                r: function(d) { return radiusScale(d); },
+                cx: window.innerWidth / 2,
+                cy: window.innerHeight / 2,
+                fill: 'none',
+                'stroke-width': 3,
+                'stroke-opacity': 0.3,
+                stroke: function(d) { return d3.hsl(hueScale(d), 0.5, 0.5); }
+            });
+
+        circles.exit().remove();
         requestAnimationFrame(renderFrame);
     }
     renderFrame();
