@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <style>
+            body {
+                margin: 0;
+            }
+
+            #bins {
+                position: fixed;
+                width: 100vw;
+                height: 100vh;
+                -webkit-transition: 0.1s ease all;
+            }
+
+            .bin {
+                background-color: blue;
+                height: 100%;
+                width: 2px;
+                float: left;
+            }
+
+        </style>
+        <div id="bins"></div>
+
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        <script src="index.js"></script>
+    </body>
+</html>
